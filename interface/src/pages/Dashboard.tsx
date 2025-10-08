@@ -44,7 +44,6 @@ const Dashboard = () => {
   useEffect(() => {
     async function loadTransactionsSummary() {
       const response = await getTransactionSummary(month, year);
-      console.log(response);
       setSummary(response);
     }
     loadTransactionsSummary();
@@ -53,7 +52,6 @@ const Dashboard = () => {
   useEffect(() => {
     async function loadTransactionsMonthly() {
       const response = await getTransactionsMonthly(month, year);
-      console.log(response.history);
       setMonthlyItemsData(response.history);
     }
     loadTransactionsMonthly();
@@ -111,7 +109,7 @@ const Dashboard = () => {
           hover
         >
           <p className="text-2xl font-semibold mt-2 text-red-600">
-            {formatCurrency(summary.balance)}
+            {formatCurrency(summary.totalExpenses)}
           </p>
         </Card>
       </div>
@@ -182,7 +180,7 @@ const Dashboard = () => {
                     labelStyle={{ color: "#F8F8F8" }}
                   />
                   <Legend />
-                  <Bar dataKey="expenses" fill="#FF6384" name="Despesas" />
+                  <Bar dataKey="expense" fill="#FF6384" name="Despesas" />
                   <Bar dataKey="income" fill="#37E359" name="Receitas" />
                 </BarChart>
               </ResponsiveContainer>

@@ -5,7 +5,10 @@ import {
   type ChangeEvent,
   type FormEvent,
 } from "react";
-import { TransactionType, type createTransactionDTO } from "../types/transactions";
+import {
+  TransactionType,
+  type createTransactionDTO,
+} from "../types/transactions";
 import { getCategories } from "../services/categoryService";
 import type { Category } from "../types/category";
 import Card from "../components/Card";
@@ -82,30 +85,27 @@ const TransactionsForm = () => {
 
   const handleSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
-    setLoading(true)
+    setLoading(true);
     try {
       if (!validateForm()) {
         return;
       }
 
+      const transactionData: createTransactionDTO = {
+        description: formData.description,
+        amount: formData.amount,
+        categoryId: formData.categoryId,
+        type: formData.type,
+        date: `${formData.date}T12:00:00.000Z`,
+      };
 
-      const transactionData:createTransactionDTO = {
-        description:formData.description,
-        amount:formData.amount,
-        categoryId:formData.categoryId,
-        type:formData.type,
-        date: `${formData.date}T12:00:00.000Z`
-      }
-
-      await createTransaction(transactionData)
-      toast.success("Transação cadastrada com sucesso!")
-      navigate("/transacoes")
-
-
+      await createTransaction(transactionData);
+      toast.success("Transação cadastrada com sucesso!");
+      navigate("/transacoes");
     } catch (err) {
-      toast.error("Falha ao adicionar transação...")
-    } finally{
-      setLoading(false)
+      toast.error("Falha ao adicionar transação...");
+    } finally {
+      setLoading(false);
     }
     console.log(event);
   };
@@ -146,7 +146,9 @@ const TransactionsForm = () => {
               value={formData.description}
               onChange={handleChange}
               placeholder="Ex: Supermercado, Salário, etc..."
-              className={`${error && !formData.description ? "border border-red-500" : ""}`}
+              className={`${
+                error && !formData.description ? "border border-red-500" : ""
+              }`}
             />
             <Input
               label="Valor"
@@ -157,7 +159,9 @@ const TransactionsForm = () => {
               onChange={handleChange}
               placeholder="R$ 0,00"
               icon={<DollarSign className="w-4 h-4" />}
-              className={`${error && !formData.amount ? "border border-red-500" : ""}`}
+              className={`${
+                error && !formData.amount ? "border border-red-500" : ""
+              }`}
             />
             <Input
               label="Data"
@@ -167,7 +171,9 @@ const TransactionsForm = () => {
               onChange={handleChange}
               placeholder="R$ 0,00"
               icon={<Calendar className="w-4 h-4" />}
-              className={`${error && !formData.date ? "border border-red-500" : ""}`}
+              className={`${
+                error && !formData.date ? "border border-red-500" : ""
+              }`}
             />
             <Select
               label="Categoria"
@@ -182,10 +188,15 @@ const TransactionsForm = () => {
                   label: category.name,
                 })),
               ]}
-              error={`${error && !formData.type}`}
+              error={!!error && formData.categoryId === ""}
             />
             <div className="flex justify-end space-x-3 mt-2">
-              <Button variant="outline" onClick={handleCancel} type="button" disabled={loading}>
+              <Button
+                variant="outline"
+                onClick={handleCancel}
+                type="button"
+                disabled={loading}
+              >
                 Cancelar
               </Button>
               <Button
@@ -199,10 +210,11 @@ const TransactionsForm = () => {
               >
                 {loading ? (
                   <div className="flex justify-center items-center">
-            <div className="w-4 h-4 border-4 border-t-4 border-gray-700 border-t-transparent rounded-full animate-spin pl-4"></div>
-          </div>
-                ): <Save className="w-4 h-4 mr-2" />}
-                
+                    <div className="w-4 h-4 border-4 border-t-4 border-gray-700 border-t-transparent rounded-full animate-spin pl-4"></div>
+                  </div>
+                ) : (
+                  <Save className="w-4 h-4 mr-2" />
+                )}
                 Salvar
               </Button>
             </div>

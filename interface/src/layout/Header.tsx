@@ -49,9 +49,9 @@ const changeMenu = ():void => {
 
     return (
         
-        <header className="bg-gray-900 border-b border-gray-700">
+        <header className="bg-gray-900 border-b border-gray-700 h-20 w-full overflow-hidden">
             <div className="container-app">
-                <div className="flex justify-between items-center py-4">
+                <div className="flex justify-between items-center">
                     <Link to="/" className="flex gap-2 text-xl text-primary-500 items-center font-bold"><Fine /></Link>   
                     
                     {isAuthenticated && (

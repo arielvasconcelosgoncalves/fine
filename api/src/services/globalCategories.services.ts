@@ -4,21 +4,29 @@ import prisma from "../config/prisma.ts";
 type GlobalCategoryInput = Pick<Category, "name" | "color" | "type">
 
 const globalCategories: GlobalCategoryInput[] = [
-  // Despesas
-  { name: "Alimentação", color: "#FF5733", type: TransactionType.expense },
-  { name: "Transporte", color: "#33A8FF", type: TransactionType.expense },
-  { name: "Moradia", color: "#33FF57", type: TransactionType.expense },
-  { name: "Saúde", color: "#F033FF", type: TransactionType.expense },
-  { name: "Educação", color: "#FF3366", type: TransactionType.expense },
-  { name: "Lazer", color: "#FFBA33", type: TransactionType.expense },
-  { name: "Compras", color: "#33FFF6", type: TransactionType.expense },
-  { name: "Outros", color: "#B033FF", type: TransactionType.expense },
+  // 💸 Despesas
+  { name: "Alimentação", color: "#FF6B6B", type: TransactionType.expense }, // vermelho suave
+  { name: "Transporte", color: "#4ECDC4", type: TransactionType.expense }, // turquesa
+  { name: "Moradia", color: "#45B7D1", type: TransactionType.expense }, // azul claro
+  { name: "Saúde", color: "#C56CF0", type: TransactionType.expense }, // lilás
+  { name: "Educação", color: "#F78FB3", type: TransactionType.expense }, // rosa pastel
+  { name: "Lazer", color: "#FFD93D", type: TransactionType.expense }, // amarelo
+  { name: "Supermercado", color: "#00C9A7", type: TransactionType.expense }, // verde água
+  { name: "Vestuário", color: "#FF9F1C", type: TransactionType.expense }, // laranja queimado
+  { name: "Higiene", color: "#9B5DE5", type: TransactionType.expense }, // roxo médio
+  { name: "Presente", color: "#FFB6B9", type: TransactionType.expense }, // rosa claro
+  { name: "Assinaturas", color: "#6BCB77", type: TransactionType.expense }, // verde médio
+  { name: "Investimento", color: "#4D96FF", type: TransactionType.expense }, // azul forte
+  { name: "Outros", color: "#A5A6F6", type: TransactionType.expense }, // lavanda clara
 
-  // Receitas
-  { name: "Salário", color: "#33FF57", type: TransactionType.income },
-  { name: "Freelance", color: "#33A8FF", type: TransactionType.income },
-  { name: "Investimentos", color: "#FFBA33", type: TransactionType.income },
-  { name: "Outros", color: "#B033FF", type: TransactionType.income },
+  // 💰 Receitas
+  { name: "Salário", color: "#1DD3B0", type: TransactionType.income }, // verde turquesa
+  { name: "Freelance", color: "#00BFA6", type: TransactionType.income }, // verde escuro
+  { name: "Investimentos", color: "#FFD93D", type: TransactionType.income }, // amarelo ouro
+  { name: "Bônus", color: "#FF6F91", type: TransactionType.income }, // rosa vibrante
+  { name: "Reembolso", color: "#6BCB77", type: TransactionType.income }, // verde médio
+  { name: "Presente", color: "#4D96FF", type: TransactionType.income }, // azul forte
+  { name: "Outros", color: "#A5A6F6", type: TransactionType.income }, // lilás claro
 ];
 
 export const initializeGlobalCatgories = async():Promise<Category[]>=>{

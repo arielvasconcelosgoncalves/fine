@@ -4,7 +4,7 @@ import { initializeGlobalCatgories } from "./services/globalCategories.services.
 import { env } from "./config/env.ts";
 import initializeFirebaseAdmin from "./config/firebase.ts";
 
-const PORT = Number(process.env.PORT) || 3000;
+const PORT = Number(process.env.PORT) || 4000;
 
 initializeFirebaseAdmin();
 

@@ -1,7 +1,7 @@
-import {TransactionType, type Category} from "@prisma/client";
+import { TransactionType, type Category } from "@prisma/client";
 import prisma from "../config/prisma.ts";
 
-type GlobalCategoryInput = Pick<Category, "name" | "color" | "type">
+type GlobalCategoryInput = Pick<Category, "name" | "color" | "type">;
 
 const globalCategories: GlobalCategoryInput[] = [
   // 💸 Despesas
@@ -29,31 +29,30 @@ const globalCategories: GlobalCategoryInput[] = [
   { name: "Outros", color: "#A5A6F6", type: TransactionType.income }, // lilás claro
 ];
 
-export const initializeGlobalCatgories = async():Promise<Category[]>=>{
-    const createdCategories:Category[] = []
+export const initializeGlobalCatgories = async (): Promise<Category[]> => {
+  const createdCategories: Category[] = [];
 
-    for (const category of globalCategories){
-        try{
-            const existing = await prisma.category.findFirst({
-                where:{
-                    name: category.name,
-                    type: category.type
-                }
-            })
+  for (const category of globalCategories) {
+    try {
+      const existing = await prisma.category.findFirst({
+        where: {
+          name: category.name,
+          type: category.type,
+        },
+      });
 
-            if(!existing){
-                const newCategory = await prisma.category.create({data: category})
-                console.log(`Criada ${newCategory.name}`)
-                createdCategories.push(newCategory)
-            }else{
-                createdCategories.push(existing)
-            }
-
-        }catch(err){
-            console.error("Erro ao criar categorias")
-        }
-        console.log("Todas as categorias inicializadas")
+      if (!existing) {
+        const newCategory = await prisma.category.create({ data: category });
+        console.log(`Criada ${newCategory.name}`);
+        createdCategories.push(newCategory);
+      } else {
+        createdCategories.push(existing);
+      }
+    } catch (err) {
+      console.error("Erro ao criar categorias", err);
     }
+    console.log("Todas as categorias inicializadas");
+  }
 
-    return createdCategories;
-}
+  return createdCategories;
+};

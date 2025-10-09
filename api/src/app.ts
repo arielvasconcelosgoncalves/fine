@@ -11,7 +11,7 @@ const app: FastifyInstance = Fastify({
 });
 
 app.register(cors, {
-  origin: true,
+  origin: process.env.ALLOWED_ORIGIN || "http://localhost:5173",
   methods: ["GET", "POST", "DELETE", "PATCH", "OPTIONS", "PUT"],
 });
 

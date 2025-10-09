@@ -1,6 +1,6 @@
 import type { Category, CategorySummary } from "./category";
 
-export const enum TransactionType {
+export enum TransactionType {
   EXPENSE = "expense",
   INCOME = "income",
 }

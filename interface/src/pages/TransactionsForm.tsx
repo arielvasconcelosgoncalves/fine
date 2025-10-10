@@ -107,7 +107,6 @@ const TransactionsForm = () => {
     } finally {
       setLoading(false);
     }
-    console.log(event);
   };
 
   const handleCancel = () => {
@@ -146,9 +145,8 @@ const TransactionsForm = () => {
               value={formData.description}
               onChange={handleChange}
               placeholder="Ex: Supermercado, Salário, etc..."
-              className={`${
-                error && !formData.description ? "border border-red-500" : ""
-              }`}
+              className={`${error && !formData.description ? "border border-red-500" : ""
+                }`}
             />
             <Input
               label="Valor"
@@ -159,9 +157,8 @@ const TransactionsForm = () => {
               onChange={handleChange}
               placeholder="R$ 0,00"
               icon={<DollarSign className="w-4 h-4" />}
-              className={`${
-                error && !formData.amount ? "border border-red-500" : ""
-              }`}
+              className={`${error && !formData.amount ? "border border-red-500" : ""
+                }`}
             />
             <Input
               label="Data"
@@ -171,9 +168,8 @@ const TransactionsForm = () => {
               onChange={handleChange}
               placeholder="R$ 0,00"
               icon={<Calendar className="w-4 h-4" />}
-              className={`${
-                error && !formData.date ? "border border-red-500" : ""
-              }`}
+              className={`${error && !formData.date ? "border border-red-500" : ""
+                }`}
             />
             <Select
               label="Categoria"

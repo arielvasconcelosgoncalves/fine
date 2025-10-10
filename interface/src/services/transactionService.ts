@@ -13,7 +13,6 @@ export const getTransactions = async (
   const response = await api.get<Transaction[]>("/transactions", {
     params: filter,
   });
-  console.log(response.data);
   return response.data;
 };
 
@@ -48,7 +47,7 @@ export const deleteTransactions = async (id: string): Promise<void> => {
   await api.delete(`/transactions/${id}`);
 };
 
-export const createTransaction = async (transactionData:createTransactionDTO):Promise<Transaction> => {
+export const createTransaction = async (transactionData: createTransactionDTO): Promise<Transaction> => {
   const response = await api.post<Transaction>("/transactions", transactionData)
   return response.data
 }

@@ -51,8 +51,8 @@ export const initializeGlobalCatgories = async (): Promise<Category[]> => {
     } catch (err) {
       console.error("Erro ao criar categorias", err);
     }
-    console.log("Todas as categorias inicializadas");
-  }
 
+  }
+  console.log("Todas as categorias inicializadas");
   return createdCategories;
 };

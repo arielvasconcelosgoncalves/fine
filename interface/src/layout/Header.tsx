@@ -54,7 +54,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-gray-900 border-b border-gray-700 h-25 w-full overflow-hidden relative">
+    <header className="bg-gray-900 border-b border-gray-700 w-full overflow-hidden relative">
       <div className="container-app">
         <div className="flex justify-between items-center">
           <Link
@@ -117,8 +117,8 @@ const Header = () => {
       </div>
 
       {isOpen && (
-        <div className="absolute top-full left-0 w-full bg-gray-900 border-t border-gray-700 z-50">
-          <div className="p-4">
+        <div>
+          <div>
             {isAuthenticated ? (
               <>
                 <nav className="space-y-1">

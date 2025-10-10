@@ -29,7 +29,7 @@ const globalCategories: GlobalCategoryInput[] = [
   { name: "Outros", color: "#A5A6F6", type: TransactionType.income }, // lilás claro
 ];
 
-export const initializeGlobalCatgories = async (): Promise<Category[]> => {
+export const initializeGlobalCategories = async (): Promise<Category[]> => {
   const createdCategories: Category[] = [];
 
   for (const category of globalCategories) {

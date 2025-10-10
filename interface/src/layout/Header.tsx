@@ -54,7 +54,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-gray-900 border-b border-gray-700 h-25 w-full overflow-hidden">
+    <header className="bg-gray-900 border-b border-gray-700 h-25 w-full overflow-hidden relative">
       <div className="container-app">
         <div className="flex justify-between items-center">
           <Link
@@ -70,11 +70,10 @@ const Header = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`${
-                    pathname === link.path
-                      ? "text-primary-500 bg-primary-500/10 rounded-md h-10 px-3 py-2"
-                      : "text-gray-400 h-10 px-3 py-2 hover:text-primary-500 hover:bg-primary-500/5 rounded-md"
-                  }`}
+                  className={`${pathname === link.path
+                    ? "text-primary-500 bg-primary-500/10 rounded-md h-10 px-3 py-2"
+                    : "text-gray-400 h-10 px-3 py-2 hover:text-primary-500 hover:bg-primary-500/5 rounded-md"
+                    }`}
                 >
                   {link.name}
                 </Link>
@@ -118,8 +117,8 @@ const Header = () => {
       </div>
 
       {isOpen && (
-        <div>
-          <div>
+        <div className="absolute top-full left-0 w-full bg-gray-900 border-t border-gray-700 z-50">
+          <div className="p-4">
             {isAuthenticated ? (
               <>
                 <nav className="space-y-1">
@@ -127,11 +126,10 @@ const Header = () => {
                     <Link
                       to={link.path}
                       key={link.path}
-                      className={`block px-3 py-2 rounded-lg ${
-                        pathname === link.path
-                          ? "bg-gray-800 text-primary-500 font-medium"
-                          : "text-gray-400 hover:bg-gray-800 hover:text-primary-500"
-                      }`}
+                      className={`block px-3 py-2 rounded-lg ${pathname === link.path
+                        ? "bg-gray-800 text-primary-500 font-medium"
+                        : "text-gray-400 hover:bg-gray-800 hover:text-primary-500"
+                        }`}
                       onClick={() => setIsOpen(false)}
                     >
                       {link.name}

@@ -206,7 +206,7 @@ const TransactionsForm = () => {
               >
                 {loading ? (
                   <div className="flex justify-center items-center">
-                    <div className="w-4 h-4 border-4 border-t-4 border-gray-700 border-t-transparent rounded-full animate-spin pl-4"></div>
+                    <div className="w-4 h-4 border-4 border-t-4 border-gray-700 border-t-transparent rounded-full animate-spin"></div>
                   </div>
                 ) : (
                   <Save className="w-4 h-4 mr-2" />

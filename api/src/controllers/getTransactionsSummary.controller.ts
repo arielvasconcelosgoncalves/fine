@@ -44,10 +44,11 @@ export const getTransactionsSummary = async (
     let totalExpenses = 0;
     let totalIncomes = 0;
     const groupedExpenses = new Map<string, CategorySummary>();
+    const groupedIncomes = new Map<string, CategorySummary>();
 
     for (const transaction of transactions) {
       if (transaction.type === TransactionType.expense) {
-        const existing = groupedExpenses.get(transaction.categoryId) ?? {
+        const existingExpenses = groupedExpenses.get(transaction.categoryId) ?? {
           categoryId: transaction.categoryId,
           categoryName: transaction.category.name,
           categoryColor: transaction.category.color,
@@ -55,31 +56,52 @@ export const getTransactionsSummary = async (
           percentage: 0,
         };
 
-        existing.amount += transaction.amount;
-        groupedExpenses.set(transaction.categoryId, existing);
+        existingExpenses.amount += transaction.amount;
+        groupedExpenses.set(transaction.categoryId, existingExpenses);
+
+
 
         totalExpenses += transaction.amount;
       } else {
-        totalIncomes += transaction.amount;
-      }
-    }
-    const summary: TransactionSummary = {
-      totalExpenses,
-      totalIncomes,
-      balance: Number((totalIncomes - totalExpenses).toFixed(2)),
-      expensesByCategory: Array.from(groupedExpenses.values())
-        .map((entry) => ({
-          ...entry,
-          percentage: Number.parseFloat(
-            ((entry.amount / totalExpenses) * 100).toFixed(2)
-          ),
-        }))
-        .sort((a, b) => b.amount - a.amount),
-    };
+        const existingIncomes = groupedIncomes.get(transaction.categoryId) ?? {
+          categoryId: transaction.categoryId,
+          categoryName: transaction.category.name,
+          categoryColor: transaction.category.color,
+          amount: 0,
+          percentage: 0,
+        }
 
-    reply.send(summary);
-  } catch (err) {
-    request.log.error("Erro ao trazer as informações");
-    reply.status(500).send({ error: "Erro do servidor" });
-  }
-};
+        existingIncomes.amount += transaction.amount;
+        groupedExpenses.set(transaction.categoryId, existingIncomes);
+
+        totalIncomes += transaction.amount;
+
+      }
+      const summary: TransactionSummary = {
+        totalExpenses,
+        totalIncomes,
+        balance: Number((totalIncomes - totalExpenses).toFixed(2)),
+        expensesByCategory: Array.from(groupedExpenses.values())
+          .map((entry) => ({
+            ...entry,
+            percentage: Number.parseFloat(
+              ((entry.amount / totalExpenses) * 100).toFixed(2)
+            ),
+          }))
+          .sort((a, b) => b.amount - a.amount),
+        incomesByCategory: Array.from(groupedIncomes.values())
+          .map((entry) => ({
+            ...entry,
+            percentage: Number.parseFloat(
+              ((entry.amount / totalIncomes) * 100).toFixed(2)
+            ),
+          }))
+          .sort((a, b) => b.amount - a.amount),
+      };
+
+      reply.send(summary);
+    } catch (err) {
+      request.log.error("Erro ao trazer as informações");
+      reply.status(500).send({ error: "Erro do servidor" });
+    }
+  };

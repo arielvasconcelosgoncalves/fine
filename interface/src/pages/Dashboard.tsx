@@ -27,6 +27,7 @@ const initialSummary: TransactionSummary = {
   totalExpenses: 0,
   totalIncomes: 0,
   expensesByCategory: [],
+  incomesByCategory: [],
 };
 
 interface ChartLabelProps {
@@ -79,7 +80,7 @@ const Dashboard = () => {
           onYearChange={setYear}
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <Card
           icon={<Wallet size={20} className="text-primary-500" />}
           title="Saldo"
@@ -87,9 +88,8 @@ const Dashboard = () => {
           glowEffect={summary.balance > 0}
         >
           <p
-            className={`text-2xl font-semibold mt-2 ${
-              summary.balance > 0 ? "text-primary-500" : "text-red-300"
-            }`}
+            className={`text-2xl font-semibold mt-2 ${summary.balance > 0 ? "text-primary-500" : "text-red-300"
+              }`}
           >
             {formatCurrency(summary.balance)}
           </p>
@@ -148,9 +148,42 @@ const Dashboard = () => {
           )}
         </Card>
         <Card
+          icon={<TrendingUp size={20} className="text-primary-500" />}
+          title="Receitas por Categoria"
+          className="min-h-80"
+          hover
+        >
+          {summary.incomesByCategory.length > 0 ? (
+            <div className="h-72 mt-4">
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={summary.incomesByCategory as any}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    dataKey="amount"
+                    nameKey="categoryName"
+                    label={renderPieChatLabel as any}
+                  >
+                    {summary.incomesByCategory.map((entry) => (
+                      <Cell key={entry.categoryId} fill={entry.categoryColor} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={formatToolTipValue}></Tooltip>
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-64 text-gray-500">
+              Nenhuma Despesa Registrada nesse Período
+            </div>
+          )}
+        </Card>
+        <Card
           icon={<Calendar size={20} className="text-primary-500" />}
           title="Histórico Mensal"
-          className="min-h-80 p-2.5"
+          className="min-h-80 p-2.5 lg:col-span-2"
           hover
         >
           <div className="h-72 mt-4">

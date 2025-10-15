@@ -77,7 +77,10 @@ export const getTransactionsSummary = async (
         totalIncomes += transaction.amount;
 
       }
-      const summary: TransactionSummary = {
+      
+    }
+
+    const summary: TransactionSummary = {
         totalExpenses,
         totalIncomes,
         balance: Number((totalIncomes - totalExpenses).toFixed(2)),
@@ -100,7 +103,8 @@ export const getTransactionsSummary = async (
       };
 
       reply.send(summary);
-    } }catch (err) {
+    
+  }catch (err) {
       request.log.error("Erro ao trazer as informações");
       reply.status(500).send({ error: "Erro do servidor" });
     }

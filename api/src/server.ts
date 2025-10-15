@@ -12,7 +12,7 @@ const startServer = async () => {
   try {
     await prismaConnect();
 
-    await initializeGlobalCatgories();
+    await initializeGlobalCategories();
 
     await app.listen({ port: PORT, host: "0.0.0.0" }).then(() => {
       console.log(`🚀 Servidor rodando na porta ${PORT}`);

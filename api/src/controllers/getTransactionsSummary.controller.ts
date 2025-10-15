@@ -72,7 +72,7 @@ export const getTransactionsSummary = async (
         }
 
         existingIncomes.amount += transaction.amount;
-        groupedExpenses.set(transaction.categoryId, existingIncomes);
+        groupedIncomes.set(transaction.categoryId, existingIncomes);
 
         totalIncomes += transaction.amount;
 
@@ -100,7 +100,7 @@ export const getTransactionsSummary = async (
       };
 
       reply.send(summary);
-    } catch (err) {
+    } }catch (err) {
       request.log.error("Erro ao trazer as informações");
       reply.status(500).send({ error: "Erro do servidor" });
     }

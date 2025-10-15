@@ -1,6 +1,6 @@
 import app from "./app.ts";
 import { prismaConnect } from "./config/prisma.ts";
-import { initializeGlobalCatgories } from "./services/globalCategories.services.ts";
+import { initializeGlobalCategories } from "./services/globalCategories.services.ts";
 import { env } from "./config/env.ts";
 import initializeFirebaseAdmin from "./config/firebase.ts";
 

@@ -88,8 +88,9 @@ const Dashboard = () => {
           glowEffect={summary.balance > 0}
         >
           <p
-            className={`text-2xl font-semibold mt-2 ${summary.balance > 0 ? "text-primary-500" : "text-red-300"
-              }`}
+            className={`text-2xl font-semibold mt-2 ${
+              summary.balance > 0 ? "text-primary-500" : "text-red-300"
+            }`}
           >
             {formatCurrency(summary.balance)}
           </p>
@@ -113,7 +114,7 @@ const Dashboard = () => {
           </p>
         </Card>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 mt-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-6 mt-3">
         <Card
           icon={<TrendingUp size={20} className="text-primary-500" />}
           title="Despesas por Categoria"
@@ -128,7 +129,7 @@ const Dashboard = () => {
                     data={summary.expensesByCategory as any}
                     cx="50%"
                     cy="50%"
-                    outerRadius={80}
+                    outerRadius={110}
                     dataKey="amount"
                     nameKey="categoryName"
                     label={renderPieChatLabel as any}
@@ -161,7 +162,7 @@ const Dashboard = () => {
                     data={summary.incomesByCategory as any}
                     cx="50%"
                     cy="50%"
-                    outerRadius={80}
+                    outerRadius={110}
                     dataKey="amount"
                     nameKey="categoryName"
                     label={renderPieChatLabel as any}

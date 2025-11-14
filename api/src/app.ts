@@ -3,6 +3,7 @@ import routes from "./routes/index.ts";
 import type { FastifyInstance } from "fastify";
 import { env } from "./config/env.ts";
 import cors from "@fastify/cors";
+import "dotenv/config";
 
 const app: FastifyInstance = Fastify({
   logger: {

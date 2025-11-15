@@ -62,7 +62,9 @@ const Dashboard = () => {
     categoryName,
     percent,
   }: ChartLabelProps): string => {
-    return `${categoryName}: ${(percent * 100).toFixed(1)}%`;
+    return percent < 0.015
+      ? ""
+      : `${categoryName}: ${(percent * 100).toFixed(1)}%`;
   };
 
   const formatToolTipValue = (value: number | string): string => {
@@ -133,6 +135,7 @@ const Dashboard = () => {
                     dataKey="amount"
                     nameKey="categoryName"
                     label={renderPieChatLabel as any}
+                    labelLine={true}
                   >
                     {summary.expensesByCategory.map((entry) => (
                       <Cell key={entry.categoryId} fill={entry.categoryColor} />
@@ -166,6 +169,7 @@ const Dashboard = () => {
                     dataKey="amount"
                     nameKey="categoryName"
                     label={renderPieChatLabel as any}
+                    labelLine={true}
                   >
                     {summary.incomesByCategory.map((entry) => (
                       <Cell key={entry.categoryId} fill={entry.categoryColor} />

@@ -41,6 +41,7 @@ const Dashboard = () => {
   const [month, setMonth] = useState<number>(currentDate.getMonth() + 1);
   const [summary, setSummary] = useState<TransactionSummary>(initialSummary);
   const [monthlyItemsData, setMonthlyItemsData] = useState<MonthlyItem[]>([]);
+  const [groupBy, setGroupBy] = useState<"month" | "year">("month");
 
   useEffect(() => {
     async function loadTransactionsSummary() {
@@ -80,6 +81,8 @@ const Dashboard = () => {
           year={year}
           onMonthChange={setMonth}
           onYearChange={setYear}
+          groupBy={groupBy}
+          onGroupByChange={setGroupBy}
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

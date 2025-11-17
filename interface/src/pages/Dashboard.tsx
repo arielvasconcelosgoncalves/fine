@@ -4,7 +4,11 @@ import {
   getTransactionsMonthly,
   getTransactionSummary,
 } from "../services/transactionService";
-import type { MonthlyItem, TransactionSummary } from "../types/transactions";
+import type {
+  GroupBy,
+  MonthlyItem,
+  TransactionSummary,
+} from "../types/transactions";
 import Card from "../components/Card";
 import { Calendar, TrendingUp, Wallet } from "lucide-react";
 import { formatCurrency } from "../utils/formatter";
@@ -41,7 +45,7 @@ const Dashboard = () => {
   const [month, setMonth] = useState<number>(currentDate.getMonth() + 1);
   const [summary, setSummary] = useState<TransactionSummary>(initialSummary);
   const [monthlyItemsData, setMonthlyItemsData] = useState<MonthlyItem[]>([]);
-  const [groupBy, setGroupBy] = useState<"month" | "year">("month");
+  const [groupBy, setGroupBy] = useState<GroupBy>("month");
 
   useEffect(() => {
     async function loadTransactionsSummary() {
@@ -74,7 +78,7 @@ const Dashboard = () => {
 
   return (
     <div className="container-app py-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-3 md:items-center mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Dashboard</h1>
         <MonthYearSelect
           month={month}

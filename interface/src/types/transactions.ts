@@ -46,3 +46,5 @@ export interface MonthlyItem {
   expenses: number;
   income: number;
 }
+
+export type GroupBy = "month" | "year";

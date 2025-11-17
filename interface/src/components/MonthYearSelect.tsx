@@ -1,6 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-type GroupBy = "month" | "year";
+import type { GroupBy } from "../types/transactions";
 
 interface MonthYearSelectProps {
   month: number;
@@ -60,7 +59,7 @@ const MonthYearSelect = ({
   return (
     <>
       <select
-        className="bg-gray-800 border-gray-700 rounded-md py-1 px-3 text-sm font-medium text-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500 cursor-pointer"
+        className="bg-gray-900 border-gray-700 rounded-lg appearance-none p-3 text-sm font-medium text-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500 cursor-pointer"
         value={groupBy}
         onChange={(e) => onGroupByChange(e.target.value as GroupBy)}
       >

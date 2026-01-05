@@ -3,15 +3,21 @@ import createTransaction from "../controllers/createTransaction.controller";
 import {
   deleteTransactionSchema,
   getHistoricalTransactionsSchema,
+  getHistoricalTransactionsSchemaYear,
   getTransactionsSchema,
   getTransactionsSummarySchema,
+  getTransactionsSummarySchemaYear,
 } from "../schemas/transaction.schema";
 import getTransactions from "../controllers/getTransactions.controller";
 import { toJSONSchema, z } from "zod";
 import { getTransactionsSummary } from "../controllers/getTransactionsSummary.controller";
 import { deleteTransaction } from "../controllers/deleteTransaction.controller";
 import { authMiddleware } from "../middlewares/auth.middleware";
-import { getHistoricalTransactions } from "../controllers/getHistoricalTransactions.controller";
+import {
+  getHistoricalTransactions,
+  getHistoricalTransactionsYear,
+} from "../controllers/getHistoricalTransactions.controller";
+import { getTransactionsSummaryYear } from "../controllers/getTransactionsSummaryYear.controller";
 
 function toFastifySchema(schema: z.ZodTypeAny) {
   const jsonSchema = toJSONSchema(schema);
@@ -56,11 +62,20 @@ const transactionRoutes = async (fastify: FastifyInstance) => {
 
   fastify.route({
     method: "GET",
-    url: "/summary",
+    url: "/summary/monthly",
     schema: {
       querystring: toFastifySchema(getTransactionsSummarySchema),
     },
     handler: getTransactionsSummary,
+  });
+
+  fastify.route({
+    method: "GET",
+    url: "/summary/yearly",
+    schema: {
+      querystring: toFastifySchema(getTransactionsSummarySchemaYear),
+    },
+    handler: getTransactionsSummaryYear,
   });
 
   fastify.route({
@@ -72,17 +87,25 @@ const transactionRoutes = async (fastify: FastifyInstance) => {
     handler: deleteTransaction,
   });
 
-
   // Histórico de Transação
   fastify.route({
     method: "GET",
-    url: "/historical",
+    url: "/historical/monthly",
     schema: {
       querystring: toFastifySchema(getHistoricalTransactionsSchema),
     },
     handler: getHistoricalTransactions,
   });
 
+  // Histórico de Transação
+  fastify.route({
+    method: "GET",
+    url: "/historical/yearly",
+    schema: {
+      querystring: toFastifySchema(getHistoricalTransactionsSchemaYear),
+    },
+    handler: getHistoricalTransactionsYear,
+  });
 };
 
 export default transactionRoutes;

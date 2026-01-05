@@ -55,6 +55,12 @@ const MonthYearSelect = ({
       onMonthChange(month - 1);
     }
   };
+  const handleNextYear = (): void => {
+    onYearChange(year + 1);
+  };
+  const handlePrevYear = (): void => {
+    onYearChange(year - 1);
+  };
 
   return (
     <>
@@ -66,56 +72,95 @@ const MonthYearSelect = ({
         <option value="month">Organizar por Mês</option>
         <option value="year">Organizar por Ano</option>
       </select>
-      <div className="flex items-center justify-between bg-gray-900 rounded-lg p-3 border-gray-700">
-        <button
-          type="button"
-          className="p-2 rounded-full hover:bg-gray-800 hover:text-primary-500 transition-colors cursor-pointer"
-          aria-label="Mês Anterior"
-          onClick={handlePrevMonth}
-        >
-          <ChevronLeft />
-        </button>
-        <div className="flex gap-4">
-          <label htmlFor="month-select" className="sr-only">
-            Selecionar Mês
-          </label>
-          <select
-            id="month-select"
-            className="bg-gray-800 border-gray-700 rounded-md py-1 px-3 text-sm font-medium text-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500 cursor-pointer"
-            value={month}
-            onChange={(event) => onMonthChange(Number(event.target.value))}
+
+      {groupBy === "month" ? (
+        <div className="flex items-center justify-between bg-gray-900 rounded-lg p-3 border-gray-700">
+          <button
+            type="button"
+            className="p-2 rounded-full hover:bg-gray-800 hover:text-primary-500 transition-colors cursor-pointer"
+            aria-label="Mês Anterior"
+            onClick={handlePrevMonth}
           >
-            {monthNames.map((name, index) => (
-              <option key={name} value={index + 1}>
-                {name}
-              </option>
-            ))}
-          </select>
-          <label htmlFor="year-select" className="sr-only">
-            Selecionar Ano
-          </label>
-          <select
-            id="year-select"
-            className="bg-gray-800 border-gray-700 rounded-md py-1 px-3 text-sm font-medium text-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500 cursor-pointer"
-            value={year}
-            onChange={(event) => onYearChange(Number(event.target.value))}
+            <ChevronLeft />
+          </button>
+          <div className="flex gap-4">
+            <label htmlFor="month-select" className="sr-only">
+              Selecionar Mês
+            </label>
+            <select
+              id="month-select"
+              className="bg-gray-800 border-gray-700 rounded-md py-1 px-3 text-sm font-medium text-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500 cursor-pointer"
+              value={month}
+              onChange={(event) => onMonthChange(Number(event.target.value))}
+            >
+              {monthNames.map((name, index) => (
+                <option key={name} value={index + 1}>
+                  {name}
+                </option>
+              ))}
+            </select>
+            <label htmlFor="year-select" className="sr-only">
+              Selecionar Ano
+            </label>
+            <select
+              id="year-select"
+              className="bg-gray-800 border-gray-700 rounded-md py-1 px-3 text-sm font-medium text-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500 cursor-pointer"
+              value={year}
+              onChange={(event) => onYearChange(Number(event.target.value))}
+            >
+              {years.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            type="button"
+            className="p-2 rounded-full hover:bg-gray-800 hover:text-primary-500 transition-colors cursor-pointer"
+            aria-label="Próximo Mês"
+            onClick={handleNextMonth}
           >
-            {years.map((name) => (
-              <option key={name} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
+            <ChevronRight />
+          </button>
         </div>
-        <button
-          type="button"
-          className="p-2 rounded-full hover:bg-gray-800 hover:text-primary-500 transition-colors cursor-pointer"
-          aria-label="Próximo Mês"
-          onClick={handleNextMonth}
-        >
-          <ChevronRight />
-        </button>
-      </div>
+      ) : (
+        <div className="flex items-center justify-between bg-gray-900 rounded-lg p-3 border-gray-700">
+          <button
+            type="button"
+            className="p-2 rounded-full hover:bg-gray-800 hover:text-primary-500 transition-colors cursor-pointer"
+            aria-label="Mês Anterior"
+            onClick={handlePrevYear}
+          >
+            <ChevronLeft />
+          </button>
+          <div className="flex gap-4">
+            <label htmlFor="year-select" className="sr-only">
+              Selecionar Ano
+            </label>
+            <select
+              id="year-select"
+              className="bg-gray-800 border-gray-700 rounded-md py-1 px-3 text-sm font-medium text-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500 cursor-pointer"
+              value={year}
+              onChange={(event) => onYearChange(Number(event.target.value))}
+            >
+              {years.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            type="button"
+            className="p-2 rounded-full hover:bg-gray-800 hover:text-primary-500 transition-colors cursor-pointer"
+            aria-label="Próximo Mês"
+            onClick={handleNextYear}
+          >
+            <ChevronRight />
+          </button>
+        </div>
+      )}
     </>
   );
 };

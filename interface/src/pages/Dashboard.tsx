@@ -3,6 +3,8 @@ import MonthYearSelect from "../components/MonthYearSelect";
 import {
   getTransactionsMonthly,
   getTransactionSummary,
+  getTransactionSummaryYear,
+  getTransactionsYearly,
 } from "../services/transactionService";
 import type {
   GroupBy,
@@ -44,14 +46,19 @@ const Dashboard = () => {
   const [year, setYear] = useState<number>(currentDate.getFullYear());
   const [month, setMonth] = useState<number>(currentDate.getMonth() + 1);
   const [summary, setSummary] = useState<TransactionSummary>(initialSummary);
+  const [summaryYear, setSummaryYear] =
+    useState<TransactionSummary>(initialSummary);
   const [monthlyItemsData, setMonthlyItemsData] = useState<MonthlyItem[]>([]);
-  const [groupBy, setGroupBy] = useState<GroupBy>("month");
-
+  const [yearlyItemsData, setYearlyItemsData] = useState<MonthlyItem[]>([]);
+  const [selectGroupBy, setSelectGroupBy] = useState<GroupBy>("month");
   useEffect(() => {
     async function loadTransactionsSummary() {
       const response = await getTransactionSummary(month, year);
       setSummary(response);
+      const responseYear = await getTransactionSummaryYear(year);
+      setSummaryYear(responseYear);
     }
+
     loadTransactionsSummary();
   }, [month, year]);
 
@@ -59,6 +66,8 @@ const Dashboard = () => {
     async function loadTransactionsMonthly() {
       const response = await getTransactionsMonthly(month, year);
       setMonthlyItemsData(response.history);
+      const responseYear = await getTransactionsYearly(year);
+      setYearlyItemsData(responseYear.history);
     }
     loadTransactionsMonthly();
   }, [month, year]);
@@ -85,158 +94,325 @@ const Dashboard = () => {
           year={year}
           onMonthChange={setMonth}
           onYearChange={setYear}
-          groupBy={groupBy}
-          onGroupByChange={setGroupBy}
+          groupBy={selectGroupBy}
+          onGroupByChange={setSelectGroupBy}
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card
-          icon={<Wallet size={20} className="text-primary-500" />}
-          title="Saldo"
-          hover
-          glowEffect={summary.balance > 0}
-        >
-          <p
-            className={`text-2xl font-semibold mt-2 ${
-              summary.balance > 0 ? "text-primary-500" : "text-red-300"
-            }`}
-          >
-            {formatCurrency(summary.balance)}
-          </p>
-        </Card>
-        <Card
-          icon={<Wallet size={20} className="text-primary-500" />}
-          title="Receitas"
-          hover
-        >
-          <p className="text-2xl font-semibold mt-2 text-primary-500">
-            {formatCurrency(summary.totalIncomes)}
-          </p>
-        </Card>
-        <Card
-          icon={<Wallet size={20} className="text-red-600" />}
-          title="Despesas"
-          hover
-        >
-          <p className="text-2xl font-semibold mt-2 text-red-600">
-            {formatCurrency(summary.totalExpenses)}
-          </p>
-        </Card>
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-6 mt-3">
-        <Card
-          icon={<TrendingUp size={20} className="text-primary-500" />}
-          title="Despesas por Categoria"
-          className="min-h-80"
-          hover
-        >
-          {summary.expensesByCategory.length > 0 ? (
-            <div className="h-72 mt-4">
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie
-                    data={summary.expensesByCategory as any}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={110}
-                    dataKey="amount"
-                    nameKey="categoryName"
-                    label={renderPieChatLabel as any}
-                    labelLine={true}
-                  >
-                    {summary.expensesByCategory.map((entry) => (
-                      <Cell key={entry.categoryId} fill={entry.categoryColor} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={formatToolTipValue}></Tooltip>
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center h-64 text-gray-500">
-              Nenhuma Despesa Registrada nesse Período
-            </div>
-          )}
-        </Card>
-        <Card
-          icon={<TrendingUp size={20} className="text-primary-500" />}
-          title="Receitas por Categoria"
-          className="min-h-80"
-          hover
-        >
-          {summary.incomesByCategory.length > 0 ? (
-            <div className="h-72 mt-4">
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie
-                    data={summary.incomesByCategory as any}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={110}
-                    dataKey="amount"
-                    nameKey="categoryName"
-                    label={renderPieChatLabel as any}
-                    labelLine={true}
-                  >
-                    {summary.incomesByCategory.map((entry) => (
-                      <Cell key={entry.categoryId} fill={entry.categoryColor} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={formatToolTipValue}></Tooltip>
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center h-64 text-gray-500">
-              Nenhuma Despesa Registrada nesse Período
-            </div>
-          )}
-        </Card>
-        <Card
-          icon={<Calendar size={20} className="text-primary-500" />}
-          title="Histórico Mensal"
-          className="min-h-80 p-2.5 lg:col-span-2"
-          hover
-        >
-          <div className="h-72 mt-4">
-            {monthlyItemsData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={monthlyItemsData} margin={{ left: 40 }}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="rgba(255,255,255, 0.1)"
-                  />
-                  <XAxis
-                    dataKey="name"
-                    stroke="#94A388"
-                    tick={{ style: { textTransform: "capitalize" } }}
-                  />
-                  <YAxis
-                    stroke="#94A388"
-                    tickFormatter={formatCurrency}
-                    tick={{ style: { fontSize: 14 } }}
-                  />
-                  <Tooltip
-                    formatter={formatCurrency}
-                    contentStyle={{
-                      backgroundColor: "#1A1A1A",
-                      borderColor: "#2A2A2A",
-                    }}
-                    labelStyle={{ color: "#F8F8F8" }}
-                  />
-                  <Legend />
-                  <Bar dataKey="expense" fill="#FF6384" name="Despesas" />
-                  <Bar dataKey="income" fill="#37E359" name="Receitas" />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="flex items-center justify-center h-64 text-gray-500">
-                Nenhuma Despesa Registrada nesse Período
-              </div>
-            )}
+      {selectGroupBy === "month" ? (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <Card
+              icon={<Wallet size={20} className="text-primary-500" />}
+              title="Saldo"
+              hover
+              glowEffect={summary.balance > 0}
+            >
+              <p
+                className={`text-2xl font-semibold mt-2 ${
+                  summary.balance > 0 ? "text-primary-500" : "text-red-300"
+                }`}
+              >
+                {formatCurrency(summary.balance)}
+              </p>
+            </Card>
+            <Card
+              icon={<Wallet size={20} className="text-primary-500" />}
+              title="Receitas"
+              hover
+            >
+              <p className="text-2xl font-semibold mt-2 text-primary-500">
+                {formatCurrency(summary.totalIncomes)}
+              </p>
+            </Card>
+            <Card
+              icon={<Wallet size={20} className="text-red-600" />}
+              title="Despesas"
+              hover
+            >
+              <p className="text-2xl font-semibold mt-2 text-red-600">
+                {formatCurrency(summary.totalExpenses)}
+              </p>
+            </Card>
           </div>
-        </Card>
-      </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-6 mt-3">
+            <Card
+              icon={<TrendingUp size={20} className="text-primary-500" />}
+              title="Despesas por Categoria"
+              className="min-h-80"
+              hover
+            >
+              {summary.expensesByCategory.length > 0 ? (
+                <div className="h-72 mt-4">
+                  <ResponsiveContainer>
+                    <PieChart>
+                      <Pie
+                        data={summary.expensesByCategory as any}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={110}
+                        dataKey="amount"
+                        nameKey="categoryName"
+                        label={renderPieChatLabel as any}
+                        labelLine={true}
+                      >
+                        {summary.expensesByCategory.map((entry) => (
+                          <Cell
+                            key={entry.categoryId}
+                            fill={entry.categoryColor}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip formatter={formatToolTipValue}></Tooltip>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-64 text-gray-500">
+                  Nenhuma Despesa Registrada nesse Período
+                </div>
+              )}
+            </Card>
+            <Card
+              icon={<TrendingUp size={20} className="text-primary-500" />}
+              title="Receitas por Categoria"
+              className="min-h-80"
+              hover
+            >
+              {summary.incomesByCategory.length > 0 ? (
+                <div className="h-72 mt-4">
+                  <ResponsiveContainer>
+                    <PieChart>
+                      <Pie
+                        data={summary.incomesByCategory as any}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={110}
+                        dataKey="amount"
+                        nameKey="categoryName"
+                        label={renderPieChatLabel as any}
+                        labelLine={true}
+                      >
+                        {summary.incomesByCategory.map((entry) => (
+                          <Cell
+                            key={entry.categoryId}
+                            fill={entry.categoryColor}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip formatter={formatToolTipValue}></Tooltip>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-64 text-gray-500">
+                  Nenhuma Despesa Registrada nesse Período
+                </div>
+              )}
+            </Card>
+            <Card
+              icon={<Calendar size={20} className="text-primary-500" />}
+              title="Histórico Mensal"
+              className="min-h-80 p-2.5 lg:col-span-2"
+              hover
+            >
+              <div className="h-72 mt-4">
+                {monthlyItemsData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={monthlyItemsData} margin={{ left: 40 }}>
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="rgba(255,255,255, 0.1)"
+                      />
+                      <XAxis
+                        dataKey="name"
+                        stroke="#94A388"
+                        tick={{ style: { textTransform: "capitalize" } }}
+                      />
+                      <YAxis
+                        stroke="#94A388"
+                        tickFormatter={formatCurrency}
+                        tick={{ style: { fontSize: 14 } }}
+                      />
+                      <Tooltip
+                        formatter={formatCurrency}
+                        contentStyle={{
+                          backgroundColor: "#1A1A1A",
+                          borderColor: "#2A2A2A",
+                        }}
+                        labelStyle={{ color: "#F8F8F8" }}
+                      />
+                      <Legend />
+                      <Bar dataKey="expense" fill="#FF6384" name="Despesas" />
+                      <Bar dataKey="income" fill="#37E359" name="Receitas" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center h-64 text-gray-500">
+                    Nenhuma Despesa Registrada nesse Período
+                  </div>
+                )}
+              </div>
+            </Card>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <Card
+              icon={<Wallet size={20} className="text-primary-500" />}
+              title="Saldo"
+              hover
+              glowEffect={summaryYear.balance > 0}
+            >
+              <p
+                className={`text-2xl font-semibold mt-2 ${
+                  summaryYear.balance > 0 ? "text-primary-500" : "text-red-300"
+                }`}
+              >
+                {formatCurrency(summaryYear.balance)}
+              </p>
+            </Card>
+            <Card
+              icon={<Wallet size={20} className="text-primary-500" />}
+              title="Receitas"
+              hover
+            >
+              <p className="text-2xl font-semibold mt-2 text-primary-500">
+                {formatCurrency(summaryYear.totalIncomes)}
+              </p>
+            </Card>
+            <Card
+              icon={<Wallet size={20} className="text-red-600" />}
+              title="Despesas"
+              hover
+            >
+              <p className="text-2xl font-semibold mt-2 text-red-600">
+                {formatCurrency(summaryYear.totalExpenses)}
+              </p>
+            </Card>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-6 mt-3">
+            <Card
+              icon={<TrendingUp size={20} className="text-primary-500" />}
+              title="Despesas por Categoria"
+              className="min-h-80"
+              hover
+            >
+              {summary.expensesByCategory.length > 0 ? (
+                <div className="h-72 mt-4">
+                  <ResponsiveContainer>
+                    <PieChart>
+                      <Pie
+                        data={summaryYear.expensesByCategory as any}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={110}
+                        dataKey="amount"
+                        nameKey="categoryName"
+                        label={renderPieChatLabel as any}
+                        labelLine={true}
+                      >
+                        {summaryYear.expensesByCategory.map((entry) => (
+                          <Cell
+                            key={entry.categoryId}
+                            fill={entry.categoryColor}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip formatter={formatToolTipValue}></Tooltip>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-64 text-gray-500">
+                  Nenhuma Despesa Registrada nesse Período
+                </div>
+              )}
+            </Card>
+            <Card
+              icon={<TrendingUp size={20} className="text-primary-500" />}
+              title="Receitas por Categoria"
+              className="min-h-80"
+              hover
+            >
+              {summaryYear.incomesByCategory.length > 0 ? (
+                <div className="h-72 mt-4">
+                  <ResponsiveContainer>
+                    <PieChart>
+                      <Pie
+                        data={summaryYear.incomesByCategory as any}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={110}
+                        dataKey="amount"
+                        nameKey="categoryName"
+                        label={renderPieChatLabel as any}
+                        labelLine={true}
+                      >
+                        {summaryYear.incomesByCategory.map((entry) => (
+                          <Cell
+                            key={entry.categoryId}
+                            fill={entry.categoryColor}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip formatter={formatToolTipValue}></Tooltip>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-64 text-gray-500">
+                  Nenhuma Despesa Registrada nesse Período
+                </div>
+              )}
+            </Card>
+            <Card
+              icon={<Calendar size={20} className="text-primary-500" />}
+              title="Histórico Anual"
+              className="min-h-80 p-2.5 lg:col-span-2"
+              hover
+            >
+              <div className="h-72 mt-4">
+                {yearlyItemsData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={yearlyItemsData} margin={{ left: 40 }}>
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="rgba(255,255,255, 0.1)"
+                      />
+                      <XAxis
+                        dataKey="name"
+                        stroke="#94A388"
+                        tick={{ style: { textTransform: "capitalize" } }}
+                      />
+                      <YAxis
+                        stroke="#94A388"
+                        tickFormatter={formatCurrency}
+                        tick={{ style: { fontSize: 14 } }}
+                      />
+                      <Tooltip
+                        formatter={formatCurrency}
+                        contentStyle={{
+                          backgroundColor: "#1A1A1A",
+                          borderColor: "#2A2A2A",
+                        }}
+                        labelStyle={{ color: "#F8F8F8" }}
+                      />
+                      <Legend />
+                      <Bar dataKey="expense" fill="#FF6384" name="Despesas" />
+                      <Bar dataKey="income" fill="#37E359" name="Receitas" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center h-64 text-gray-500">
+                    Nenhuma Despesa Registrada nesse Período
+                  </div>
+                )}
+              </div>
+            </Card>
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -20,9 +20,25 @@ export const getTransactionSummary = async (
   month: number,
   year: number
 ): Promise<TransactionSummary> => {
-  const response = await api.get<TransactionSummary>("/transactions/summary", {
-    params: { month, year },
-  });
+  const response = await api.get<TransactionSummary>(
+    "/transactions/summary/monthly",
+    {
+      params: { month, year },
+    }
+  );
+
+  return response.data;
+};
+
+export const getTransactionSummaryYear = async (
+  year: number
+): Promise<TransactionSummary> => {
+  const response = await api.get<TransactionSummary>(
+    "/transactions/summary/yearly",
+    {
+      params: { year },
+    }
+  );
 
   return response.data;
 };
@@ -32,7 +48,7 @@ export const getTransactionsMonthly = async (
   year: number,
   months?: number
 ): Promise<{ history: MonthlyItem[] }> => {
-  const response = await api.get("/transactions/historical", {
+  const response = await api.get("/transactions/historical/monthly", {
     params: {
       month,
       year,
@@ -43,11 +59,28 @@ export const getTransactionsMonthly = async (
   return response.data;
 };
 
+export const getTransactionsYearly = async (
+  year: number
+): Promise<{ history: MonthlyItem[] }> => {
+  const response = await api.get("/transactions/historical/yearly", {
+    params: {
+      year,
+    },
+  });
+
+  return response.data;
+};
+
 export const deleteTransactions = async (id: string): Promise<void> => {
   await api.delete(`/transactions/${id}`);
 };
 
-export const createTransaction = async (transactionData: createTransactionDTO): Promise<Transaction> => {
-  const response = await api.post<Transaction>("/transactions", transactionData)
-  return response.data
-}
+export const createTransaction = async (
+  transactionData: createTransactionDTO
+): Promise<Transaction> => {
+  const response = await api.post<Transaction>(
+    "/transactions",
+    transactionData
+  );
+  return response.data;
+};

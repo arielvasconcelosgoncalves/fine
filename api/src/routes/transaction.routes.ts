@@ -18,6 +18,7 @@ import {
   getHistoricalTransactionsYear,
 } from "../controllers/getHistoricalTransactions.controller";
 import { getTransactionsSummaryYear } from "../controllers/getTransactionsSummaryYear.controller";
+import getTransactionsYear from "../controllers/getTransactionsYear.controller";
 
 function toFastifySchema(schema: z.ZodTypeAny) {
   const jsonSchema = toJSONSchema(schema);
@@ -56,6 +57,15 @@ const transactionRoutes = async (fastify: FastifyInstance) => {
       querystring: toFastifySchema(getTransactionsSchema),
     },
     handler: getTransactions,
+  });
+
+  fastify.route({
+    method: "GET",
+    url: "/year",
+    schema: {
+      querystring: toFastifySchema(getTransactionsSchema),
+    },
+    handler: getTransactionsYear,
   });
 
   // Busccar um Resumo

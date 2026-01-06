@@ -16,6 +16,15 @@ export const getTransactions = async (
   return response.data;
 };
 
+export const getTransactionsYear = async (
+  filter?: Partial<TransactionFilter>
+): Promise<Transaction[]> => {
+  const response = await api.get<Transaction[]>("/transactions/year", {
+    params: filter,
+  });
+  return response.data;
+};
+
 export const getTransactionSummary = async (
   month: number,
   year: number
